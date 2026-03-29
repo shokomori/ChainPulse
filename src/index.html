@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chainpulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0e1a;
+    --ink-dim: #3a3f52;
+    --ink-muted: #7a7f96;
+    --surface: #f4f3ee;
+    --surface-alt: #eceae1;
+    --surface-card: #ffffff;
+    --accent-chain: #1a5c3a;
+    --accent-chain-light: #e6f2ec;
+    --accent-chain-mid: #2d8b5a;
+    --accent-verify: #0f3460;
+    --accent-verify-light: #e8eef8;
+    --accent-alert: #c0392b;
+    --accent-alert-light: #fdeaea;
+    --accent-amber: #b7730a;
+    --accent-amber-light: #fef6e4;
+    --border: #d8d5cc;
+    --border-light: #ece9e0;
+    --chain-glow: rgba(26,92,58,0.08);
+    --radius: 4px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--surface);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--ink);
+    padding: 0 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo {
+    width: 28px;
+    height: 28px;
+    background: var(--accent-chain-mid);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .nav-logo svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .nav-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-title span {
+    color: var(--accent-chain-mid);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-nav-secondary {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    padding: 6px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+
+  .btn-nav-secondary:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .btn-nav-primary {
+    font-size: 13px;
+    color: #fff;
+    background: var(--accent-chain-mid);
+    border: none;
+    padding: 6px 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+    font-weight: 500;
+  }
+
+  .btn-nav-primary:hover {
+    background: var(--accent-chain);
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--ink);
+    padding: 80px 2.5rem 70px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(45,139,90,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,139,90,0.07) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(45,139,90,0.12);
+    border: 1px solid rgba(45,139,90,0.3);
+    border-radius: 100px;
+    padding: 5px 14px 5px 8px;
+    margin-bottom: 28px;
+  }
+
+  .hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-chain-mid);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero-badge span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-chain-mid);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+    max-width: 700px;
+  }
+
+  .hero h1 .accent-green { color: var(--accent-chain-mid); }
+
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 38px;
+    font-weight: 300;
+  }
+
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--accent-chain-mid);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover { background: var(--accent-chain); }
+
+  .btn-outline {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-outline:hover {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+  }
+
+  /* VERIFY BANNER */
+  .verify-banner {
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 2.5rem;
+  }
+
+  .verify-banner-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .verify-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .verify-input-wrap {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+  }
+
+  .verify-input {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .verify-input:focus { border-color: var(--accent-chain-mid); }
+
+  .verify-input::placeholder { color: var(--ink-muted); }
+
+  .btn-verify {
+    background: var(--accent-verify);
+    color: #fff;
+    border: none;
+    padding: 8px 22px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: var(--font-body);
+    white-space: nowrap;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .btn-verify:hover { background: #0a2445; }
+
+  /* MAIN CONTENT */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 2.5rem 80px;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .section-meta {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* NEWS GRID */
+  .news-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+
+  .news-featured {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .news-featured:hover { border-color: var(--accent-chain-mid); }
+
+  .news-featured-img {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #0f3460 0%, #1a5c3a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-featured-img-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .news-featured-img-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .news-featured-body {
+    padding: 22px 24px 20px;
+  }
+
+  .news-category {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-chain);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .news-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .news-excerpt {
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+
+  .news-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .news-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent-chain-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-chain);
+    font-family: var(--font-display);
+    flex-shrink: 0;
+  }
+
+  .news-author-name {
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+
+  .news-date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  /* VERIFIED BADGE */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-size: 10.5px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .badge-verified {
+    background: var(--accent-chain-light);
+    color: var(--accent-chain);
+    border: 1px solid rgba(26,92,58,0.2);
+  }
+
+  .badge-pending {
+    background: var(--accent-amber-light);
+    color: var(--accent-amber);
+    border: 1px solid rgba(183,115,10,0.2);
+  }
+
+  .badge-alert {
+    background: var(--accent-alert-light);
+    color: var(--accent-alert);
+    border: 1px solid rgba(192,57,43,0.2);
+  }
+
+  .badge-chain {
+    background: var(--accent-verify-light);
+    color: var(--accent-verify);
+    border: 1px solid rgba(15,52,96,0.2);
+  }
+
+  .badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* NEWS LIST PANEL */
+  .news-list-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .news-list-item {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+
+  .news-list-item:last-child { border-bottom: none; }
+  .news-list-item:hover { background: var(--surface); }
+
+  .news-list-cat {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+
+  .news-list-title {
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .news-list-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .news-list-author {
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  /* STATS STRIP */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+
+  .stat-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-sub {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+  }
+
+  .stat-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+  }
+
+  .stat-up { color: var(--accent-chain-mid); }
+  .stat-down { color: var(--accent-alert); }
+
+  /* VERIFICATION PANEL */
+  .verify-panel {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 56px;
+  }
+
+  .verify-panel-header {
+    background: var(--ink);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .verify-panel-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chain-icon {
+    width: 22px;
+    height: 22px;
+    background: var(--accent-chain-mid);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .verify-panel-body {
+    padding: 24px;
+  }
+
+  /* TRANSACTION ROW */
+  .tx-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .tx-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .tx-row:last-child { border-bottom: none; }
+
+  .tx-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .tx-icon-register { background: var(--accent-chain-light); color: var(--accent-chain); }
+  .tx-icon-approve { background: var(--accent-verify-light); color: var(--accent-verify); }
+  .tx-icon-amend { background: var(--accent-amber-light); color: var(--accent-amber); }
+  .tx-icon-alert { background: var(--accent-alert-light); color: var(--accent-alert); }
+
+  .tx-main { min-width: 0; }
+
+  .tx-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+
+  .tx-hash {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-muted);
+  }
+
+  .tx-time {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  /* BOTTOM GRID */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* JOURNALIST PORTAL */
+  .portal-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .portal-header {
+    padding: 18px 22px 16px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .portal-title {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .portal-body {
+    padding: 22px;
+  }
+
+  .form-field {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink-dim);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+  }
+
+  .form-input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .form-input:focus { border-color: var(--accent-chain-mid); }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.6;
+  }
+
+  .form-input::placeholder { color: var(--ink-muted); font-size: 13px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .hash-preview {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    margin-bottom: 16px;
+  }
+
+  .hash-preview-label {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+
+  .hash-preview-value {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--accent-chain);
+    word-break: break-all;
+  }
+
+  .btn-full {
+    width: 100%;
+    padding: 11px;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.15s;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-full-primary {
+    background: var(--accent-chain);
+    color: #fff;
+  }
+
+  .btn-full-primary:hover { background: #0f3d26; }
+
+  /* DID PANEL */
+  .did-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .did-item {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .did-info { min-width: 0; flex: 1; }
+
+  .did-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .did-address {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .did-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .btn-sm {
+    padding: 5px 12px;
+    font-size: 11.5px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: var(--font-body);
+    border: 1px solid var(--border);
+    background: var(--surface-card);
+    color: var(--ink-dim);
+    transition: all 0.12s;
+  }
+
+  .btn-sm:hover { background: var(--surface-alt); border-color: var(--ink-muted); }
+
+  .btn-sm-danger {
+    border-color: rgba(192,57,43,0.25);
+    color: var(--accent-alert);
+  }
+
+  .btn-sm-danger:hover {
+    background: var(--accent-alert-light);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 28px 2.5rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-left {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .footer-network {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .network-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-chain-mid);
+    animation: pulse 2s infinite;
+  }
+
+  .network-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-chain-mid);
+  }
+
+  /* ARTICLE DETAIL OVERLAY */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,14,26,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .overlay.open { display: flex; }
+
+  .overlay-card {
+    background: var(--surface-card);
+    border-radius: var(--radius-xl);
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+  }
+
+  .overlay-header {
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    background: var(--surface-card);
+  }
+
+  .overlay-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .overlay-close {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--ink-muted);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .overlay-close:hover { background: var(--surface-alt); color: var(--ink); }
+
+  .overlay-body { padding: 22px 26px; }
+
+  .verify-result-box {
+    background: var(--accent-chain-light);
+    border: 1px solid rgba(26,92,58,0.25);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .verify-result-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-chain);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #fff;
+    font-size: 14px;
+  }
+
+  .verify-result-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-chain);
+    margin-bottom: 2px;
+  }
+
+  .verify-result-sub {
+    font-size: 12px;
+    color: var(--accent-chain);
+    opacity: 0.75;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .meta-cell {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+
+  .meta-cell-label {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    margin-bottom: 5px;
+  }
+
+  .meta-cell-value {
+    font-size: 12.5px;
+    color: var(--ink);
+    font-weight: 500;
+    word-break: break-all;
+  }
+
+  .meta-cell-mono {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--accent-chain);
+  }
+
+  /* Chain visual */
+  .chain-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 22px;
+  }
+
+  .chain-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .chain-step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .chain-step-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-chain-mid);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .chain-step-line {
+    width: 1px;
+    flex: 1;
+    min-height: 22px;
+    background: var(--border);
+  }
+
+  .chain-step:last-child .chain-step-line { display: none; }
+
+  .chain-step-content {
+    padding-bottom: 18px;
+    flex: 1;
+  }
+
+  .chain-step-title {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .chain-step-detail {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 3px;
+    margin-bottom: 18px;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+  }
+
+  .tab.active {
+    background: var(--surface-card);
+    color: var(--ink);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--ink);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: var(--radius-lg);
+    font-size: 13px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s;
+    max-width: 320px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .toast-icon {
+    width: 20px;
+    height: 20px;
+    background: var(--accent-chain-mid);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .news-grid { grid-template-columns: 1fr; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    .bottom-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1.25rem; }
+    .hero { padding: 56px 1.25rem 50px; }
+    .main { padding: 32px 1.25rem 60px; }
+    .verify-banner { padding: 14px 1.25rem; }
+    .nav-links { display: none; }
+    footer { padding: 22px 1.25rem; }
+  }
+
+  @media (max-width: 600px) {
+    .stats-strip { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .verify-banner-inner { flex-direction: column; align-items: stretch; }
+    .verify-label { display: none; }
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-inner { animation: fadeUp 0.5s ease both; }
+  .stats-strip { animation: fadeUp 0.5s 0.1s ease both; }
+  .news-grid { animation: fadeUp 0.5s 0.15s ease both; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-logo">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="6" width="4" height="4" rx="1" fill="white"/>
+        <rect x="6" y="3" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+        <rect x="11" y="6" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+        <line x1="5" y1="8" x2="6" y2="5" stroke="white" stroke-width="0.8" opacity="0.5"/>
+        <line x1="10" y1="5" x2="11" y2="8" stroke="white" stroke-width="0.8" opacity="0.5"/>
+        <rect x="6" y="10" width="4" height="4" rx="1" fill="rgba(255,255,255,0.4)"/>
+        <line x1="8" y1="7" x2="8" y2="10" stroke="white" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+    </div>
+    <span class="nav-title">Chain<span>Post</span></span>
+  </a>
+
+  <div class="nav-links">
+    <a href="#" class="active">Feed</a>
+    <a href="#">Verify</a>
+    <a href="#">Journalists</a>
+    <a href="#">Block Explorer</a>
+    <a href="#">About</a>
+  </div>
+
+  <div class="nav-actions">
+    <button class="btn-nav-secondary">Connect Wallet</button>
+    <button class="btn-nav-primary">Register DID</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      <span>Ethereum Testnet · Block #14,082,441</span>
+    </div>
+    <h1>News you can verify.<br>On the <span class="accent-green">blockchain.</span></h1>
+    <p class="hero-sub">A decentralized news ecosystem using blockchain technology and W3C Decentralized Identifiers to ensure tamper-evident, cryptographically authenticated journalism.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary" onclick="openVerifyOverlay(); return false;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5L12.5 4.5V9.5L7 12.5L1.5 9.5V4.5L7 1.5Z" stroke="currentColor" stroke-width="1.2"/><path d="M5 7L6.5 8.5L9.5 5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Verify an Article
+      </a>
+      <a href="#" class="btn-outline">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4.5V7.5L9 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        View Block Explorer
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFY QUICK INPUT -->
+<div class="verify-banner">
+  <div class="verify-banner-inner">
+    <span class="verify-label">Quick Verify</span>
+    <div class="verify-input-wrap">
+      <input class="verify-input" id="quick-hash" type="text" placeholder="Paste article hash or transaction ID (0x...)">
+      <button class="btn-verify" onclick="quickVerify()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M5 9L8.5 5.5L5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Verify
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-card">
+      <div class="stat-label">Articles Registered</div>
+      <div class="stat-value">12,847</div>
+      <div class="stat-sub"><span class="stat-trend stat-up">↑ 2.4%</span> this week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Verified Journalists</div>
+      <div class="stat-value">341</div>
+      <div class="stat-sub"><span class="stat-trend stat-up">↑ 18</span> new this month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tampered Detected</div>
+      <div class="stat-value">29</div>
+      <div class="stat-sub"><span class="stat-trend stat-down">↑ 3</span> flagged today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Smart Contracts</div>
+      <div class="stat-value">4</div>
+      <div class="stat-sub">Active on Sepolia Testnet</div>
+    </div>
+  </div>
+
+  <!-- NEWS FEED -->
+  <div class="section-header">
+    <h2 class="section-title">Authenticated Feed</h2>
+    <span class="section-meta">LIVE · 847 articles today</span>
+  </div>
+
+  <div class="news-grid" id="news-grid">
+    <!-- Featured article -->
+    <div class="news-featured" onclick="openArticleOverlay('featured')">
+      <div class="news-featured-img">
+        <div class="news-featured-img-pattern"></div>
+        <span class="news-featured-img-label">Blockchain-Anchored Media</span>
+      </div>
+      <div class="news-featured-body">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <div class="news-category">Politics &amp; Governance</div>
+          <span class="badge badge-verified"><span class="badge-dot"></span>Verified On-Chain</span>
+        </div>
+        <div class="news-title">COMELEC Adopts Blockchain Verification Pilot for 2025 Electoral Reports</div>
+        <p class="news-excerpt">The Commission on Elections has partnered with three independent news organizations to test a decentralized content authentication framework ahead of the midterm elections, requiring all published vote-count reports to carry cryptographic journalist signatures.</p>
+        <div class="news-meta-row">
+          <div class="news-author">
+            <div class="avatar">MR</div>
+            <span class="news-author-name">Maria Reyes · <span style="color:var(--ink-muted)">Rappler</span></span>
+          </div>
+          <span class="news-date">Mar 29, 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Article list -->
+    <div class="news-list-panel">
+      <div class="news-list-item" onclick="openArticleOverlay('a1')">
+        <div class="news-list-cat">Technology</div>
+        <div class="news-list-title">HAU Researchers Deploy Web3 News Authentication on Ethereum Sepolia</div>
+        <div class="news-list-bottom">
+          <span class="news-list-author">A. Randel &amp; H. Masato</span>
+          <span class="badge badge-verified"><span class="badge-dot"></span>On-Chain</span>
+        </div>
+      </div>
+      <div class="news-list-item" onclick="openArticleOverlay('a2')">
+        <div class="news-list-cat">Disinformation</div>
+        <div class="news-list-title">Viral Health Claim Flagged: Content Hash Mismatch Detected by TruthChain</div>
+        <div class="news-list-bottom">
+          <span class="news-list-author">J. Santos · PCIJ</span>
+          <span class="badge badge-alert"><span class="badge-dot"></span>Tampered</span>
+        </div>
+      </div>
+      <div class="news-list-item" onclick="openArticleOverlay('a3')">
+        <div class="news-list-cat">Economy</div>
+        <div class="news-list-title">BSP Raises Policy Rate; Central Bank Governor Signs Statement via DID</div>
+        <div class="news-list-bottom">
+          <span class="news-list-author">P. dela Cruz · BusinessWorld</span>
+          <span class="badge badge-verified"><span class="badge-dot"></span>On-Chain</span>
+        </div>
+      </div>
+      <div class="news-list-item" onclick="openArticleOverlay('a4')">
+        <div class="news-list-cat">Campus Media</div>
+        <div class="news-list-title">Holy Angel University Gazette Goes Fully Decentralized for Accreditation</div>
+        <div class="news-list-bottom">
+          <span class="news-list-author">HAU School of Computing</span>
+          <span class="badge badge-pending"><span class="badge-dot"></span>Pending</span>
+        </div>
+      </div>
+      <div class="news-list-item" onclick="openArticleOverlay('a5')">
+        <div class="news-list-cat">Media Law</div>
+        <div class="news-list-title">NPC Issues Guidelines on Privacy in Blockchain-Based Journalism Systems</div>
+        <div class="news-list-bottom">
+          <span class="news-list-author">R. Mangahas · Vera Files</span>
+          <span class="badge badge-chain"><span class="badge-dot"></span>DID-Signed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCKCHAIN LOG -->
+  <div class="section-header">
+    <h2 class="section-title">Recent On-Chain Activity</h2>
+    <span class="section-meta">Smart Contract Registry</span>
+  </div>
+
+  <div class="verify-panel" style="margin-bottom:56px;">
+    <div class="verify-panel-header">
+      <div class="verify-panel-title">
+        <div class="chain-icon">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="4.5" width="3" height="3" rx="0.8" fill="white"/><rect x="5" y="2" width="3" height="3" rx="0.8" fill="rgba(255,255,255,0.7)"/><rect x="8.5" y="4.5" width="3" height="3" rx="0.8" fill="rgba(255,255,255,0.7)"/><line x1="4" y1="6" x2="5" y2="3.5" stroke="white" stroke-width="0.7" opacity="0.5"/><line x1="8" y1="3.5" x2="8.8" y2="6" stroke="white" stroke-width="0.7" opacity="0.5"/></svg>
+        </div>
+        ContentRegistry.sol · Live Transactions
+      </div>
+      <span class="badge badge-verified"><span class="badge-dot"></span>Synced</span>
+    </div>
+    <div class="verify-panel-body">
+      <div class="tx-list">
+        <div class="tx-row">
+          <div class="tx-icon tx-icon-register">R</div>
+          <div class="tx-main">
+            <div class="tx-title">registerArticle() — "NPC Issues Guidelines on Privacy in Blockchain..."</div>
+            <div class="tx-hash">0x7f3a...b8c2 · by did:ethr:0x9f2e...a4d1</div>
+          </div>
+          <span class="badge badge-chain"><span class="badge-dot"></span>Confirmed</span>
+          <div class="tx-time">2 min ago</div>
+        </div>
+        <div class="tx-row">
+          <div class="tx-icon tx-icon-approve">A</div>
+          <div class="tx-main">
+            <div class="tx-title">approveContent() — Editorial sign-off by Vera Files Editor</div>
+            <div class="tx-hash">0x4a1c...d7f0 · by did:ethr:0x3b7a...c9e2</div>
+          </div>
+          <span class="badge badge-verified"><span class="badge-dot"></span>Confirmed</span>
+          <div class="tx-time">14 min ago</div>
+        </div>
+        <div class="tx-row">
+          <div class="tx-icon tx-icon-alert">!</div>
+          <div class="tx-main">
+            <div class="tx-title">validateSignature() FAIL — "Viral Health Claim" hash mismatch</div>
+            <div class="tx-hash">0x2e8b...f3a1 · Content hash differs from on-chain record</div>
+          </div>
+          <span class="badge badge-alert"><span class="badge-dot"></span>Tampered</span>
+          <div class="tx-time">1 hr ago</div>
+        </div>
+        <div class="tx-row">
+          <div class="tx-icon tx-icon-register">R</div>
+          <div class="tx-main">
+            <div class="tx-title">registerArticle() — "BSP Raises Policy Rate; Central Bank Governor..."</div>
+            <div class="tx-hash">0x6d9f...2b8e · by did:ethr:0x5a4c...7f1b</div>
+          </div>
+          <span class="badge badge-chain"><span class="badge-dot"></span>Confirmed</span>
+          <div class="tx-time">3 hr ago</div>
+        </div>
+        <div class="tx-row">
+          <div class="tx-icon tx-icon-amend">~</div>
+          <div class="tx-main">
+            <div class="tx-title">logAmendment() — Correction appended by HAU Gazette Editorial Board</div>
+            <div class="tx-hash">0x1c5d...e9a3 · Amendment #2 on article 0x44f...b901</div>
+          </div>
+          <span class="badge badge-pending"><span class="badge-dot"></span>Logged</span>
+          <div class="tx-time">5 hr ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM GRID -->
+  <div class="bottom-grid">
+
+    <!-- Journalist Submit Portal -->
+    <div class="portal-card">
+      <div class="portal-header">
+        <div class="portal-title">Journalist Portal</div>
+        <span class="badge badge-chain"><span class="badge-dot"></span>DID Connected</span>
+      </div>
+      <div class="portal-body">
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this,'submit')">Submit Article</div>
+          <div class="tab" onclick="switchTab(this,'identity')">My Identity</div>
+          <div class="tab" onclick="switchTab(this,'history')">History</div>
+        </div>
+
+        <div id="tab-submit">
+          <div class="form-field">
+            <label class="form-label">Article Headline</label>
+            <input class="form-input" type="text" placeholder="Enter full article headline" id="article-title" oninput="computeHash()">
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">Category</label>
+              <select class="form-input" id="article-cat">
+                <option>Politics</option>
+                <option>Technology</option>
+                <option>Economy</option>
+                <option>Campus Media</option>
+                <option>Health</option>
+                <option>Media Law</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Publication</label>
+              <input class="form-input" type="text" placeholder="e.g., HAU Gazette" id="article-pub">
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Article Content / Summary</label>
+            <textarea class="form-input form-textarea" placeholder="Paste article content here. SHA-256 hash will be computed and anchored to the blockchain." id="article-body" oninput="computeHash()"></textarea>
+          </div>
+          <div class="hash-preview">
+            <div class="hash-preview-label">Computed Content Hash (SHA-256)</div>
+            <div class="hash-preview-value" id="hash-display">0x — enter content above to generate hash</div>
+          </div>
+          <button class="btn-full btn-full-primary" onclick="submitArticle()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5L11.5 4.5V8.5L6.5 11.5L1.5 8.5V4.5L6.5 1.5Z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6.5L6 8L8.5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Sign & Register on Blockchain
+          </button>
+        </div>
+
+        <div id="tab-identity" style="display:none;">
+          <div class="did-list">
+            <div class="did-item">
+              <div class="did-info">
+                <div class="did-name">Ashley Randel</div>
+                <div class="did-address">did:ethr:0x9f2e4a1b8c3d7f0e5a2b9c4d1e8f3a0b7c2d9e4f</div>
+              </div>
+              <div class="did-actions">
+                <button class="btn-sm">Rotate Key</button>
+                <button class="btn-sm btn-sm-danger">Revoke</button>
+              </div>
+            </div>
+            <div class="did-item">
+              <div class="did-info">
+                <div class="did-name">Harold Masato</div>
+                <div class="did-address">did:ethr:0x3b7ac9e2d5f1a8b4c0e3d9a6f2b5c8e1d4a7b0c3</div>
+              </div>
+              <div class="did-actions">
+                <button class="btn-sm">Rotate Key</button>
+                <button class="btn-sm btn-sm-danger">Revoke</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:16px;">
+            <button class="btn-full btn-full-primary" onclick="showToast('DID registration flow initiated')">
+              + Register New DID
+            </button>
+          </div>
+        </div>
+
+        <div id="tab-history" style="display:none;">
+          <div class="tx-list">
+            <div class="tx-row" style="cursor:pointer;" onclick="openArticleOverlay('a1')">
+              <div class="tx-icon tx-icon-register">R</div>
+              <div class="tx-main">
+                <div class="tx-title">HAU Researchers Deploy Web3 News Authentication</div>
+                <div class="tx-hash">0x4f1b...c3e9 · Block #14,082,438</div>
+              </div>
+              <span class="badge badge-verified"><span class="badge-dot"></span>Live</span>
+            </div>
+            <div class="tx-row">
+              <div class="tx-icon tx-icon-amend">~</div>
+              <div class="tx-main">
+                <div class="tx-title">Amendment logged — correction to data figure</div>
+                <div class="tx-hash">0x9a2d...7f4c · Block #14,081,200</div>
+              </div>
+              <span class="badge badge-pending"><span class="badge-dot"></span>Logged</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Editor Dashboard -->
+    <div class="portal-card">
+      <div class="portal-header">
+        <div class="portal-title">Editor Dashboard</div>
+        <span class="badge badge-pending"><span class="badge-dot"></span>3 Pending</span>
+      </div>
+      <div class="portal-body">
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab2(this,'pending')">Pending Review</div>
+          <div class="tab" onclick="switchTab2(this,'approved')">Approved</div>
+        </div>
+
+        <div id="tab2-pending">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="did-item" style="flex-direction:column; align-items:stretch; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="did-name">HAU Gazette Accreditation Story</div>
+                <span class="badge badge-pending"><span class="badge-dot"></span>Awaiting</span>
+              </div>
+              <div class="did-address" style="font-family:var(--font-body); font-size:12px; color:var(--ink-muted);">Submitted by HAU School of Computing · Campus Media</div>
+              <div class="hash-preview" style="margin:0;">
+                <div class="hash-preview-label">Content Hash</div>
+                <div class="hash-preview-value">0xa8f3...2c1e · IPFS: bafybeig...k9x</div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn-full btn-full-primary" style="flex:1; padding:9px;" onclick="approveArticle(this)">
+                  Approve &amp; Sign
+                </button>
+                <button class="btn-full" style="flex:1; padding:9px; background:var(--accent-alert-light); color:var(--accent-alert); border:1px solid rgba(192,57,43,0.2);" onclick="rejectArticle(this)">
+                  Reject
+                </button>
+              </div>
+            </div>
+
+            <div class="did-item" style="flex-direction:column; align-items:stretch; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="did-name">NPC Privacy Guidelines Article</div>
+                <span class="badge badge-pending"><span class="badge-dot"></span>Awaiting</span>
+              </div>
+              <div class="did-address" style="font-family:var(--font-body); font-size:12px; color:var(--ink-muted);">Submitted by R. Mangahas · Media Law</div>
+              <div class="hash-preview" style="margin:0;">
+                <div class="hash-preview-label">Content Hash</div>
+                <div class="hash-preview-value">0x7f3a...b8c2 · IPFS: bafybeih...m2z</div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn-full btn-full-primary" style="flex:1; padding:9px;" onclick="approveArticle(this)">
+                  Approve &amp; Sign
+                </button>
+                <button class="btn-full" style="flex:1; padding:9px; background:var(--accent-alert-light); color:var(--accent-alert); border:1px solid rgba(192,57,43,0.2);" onclick="rejectArticle(this)">
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab2-approved" style="display:none;">
+          <div class="tx-list">
+            <div class="tx-row">
+              <div class="tx-icon tx-icon-approve">A</div>
+              <div class="tx-main">
+                <div class="tx-title">COMELEC Blockchain Pilot Article</div>
+                <div class="tx-hash">Approved by: did:ethr:0x3b7a...c9e2</div>
+              </div>
+              <span class="badge badge-verified"><span class="badge-dot"></span>Published</span>
+            </div>
+            <div class="tx-row">
+              <div class="tx-icon tx-icon-approve">A</div>
+              <div class="tx-main">
+                <div class="tx-title">BSP Policy Rate Decision</div>
+                <div class="tx-hash">Approved by: did:ethr:0x3b7a...c9e2</div>
+              </div>
+              <span class="badge badge-verified"><span class="badge-dot"></span>Published</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ARTICLE VERIFICATION OVERLAY -->
+<div class="overlay" id="article-overlay">
+  <div class="overlay-card">
+    <div class="overlay-header">
+      <div class="overlay-title" id="overlay-title">Loading...</div>
+      <button class="overlay-close" onclick="closeOverlay()">×</button>
+    </div>
+    <div class="overlay-body">
+      <div class="verify-result-box" id="overlay-verify-box">
+        <div class="verify-result-icon">✓</div>
+        <div>
+          <div class="verify-result-title" id="overlay-verify-status">Content Authenticated</div>
+          <div class="verify-result-sub" id="overlay-verify-detail">Hash matches on-chain record. No alterations detected.</div>
+        </div>
+      </div>
+
+      <div class="meta-grid">
+        <div class="meta-cell">
+          <div class="meta-cell-label">Author DID</div>
+          <div class="meta-cell-value meta-cell-mono" id="ov-did">did:ethr:0x9f2e...a4d1</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-cell-label">Block Number</div>
+          <div class="meta-cell-value" id="ov-block">#14,082,441</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-cell-label">Timestamp</div>
+          <div class="meta-cell-value" id="ov-time">Mar 29, 2026 · 08:14 UTC</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-cell-label">IPFS CID</div>
+          <div class="meta-cell-value meta-cell-mono" id="ov-ipfs">bafybeig...k9x</div>
+        </div>
+      </div>
+
+      <div style="font-family:var(--font-mono); font-size:10px; color:var(--ink-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.1em;">Content Hash (SHA-256)</div>
+      <div class="hash-preview" style="margin-bottom:22px;">
+        <div class="hash-preview-value" id="ov-hash" style="font-size:11px;">0x7f3a8b2c1d4e9f0a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8</div>
+      </div>
+
+      <div style="font-family:var(--font-mono); font-size:10px; color:var(--ink-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.1em;">Chain of Custody</div>
+      <div class="chain-steps">
+        <div class="chain-step">
+          <div class="chain-step-left">
+            <div class="chain-step-dot"></div>
+            <div class="chain-step-line"></div>
+          </div>
+          <div class="chain-step-content">
+            <div class="chain-step-title">DID Registered — Journalist identity anchored to blockchain</div>
+            <div class="chain-step-detail">did:ethr:0x9f2e4a1b... · Block #14,080,001 · Mar 15, 2026</div>
+          </div>
+        </div>
+        <div class="chain-step">
+          <div class="chain-step-left">
+            <div class="chain-step-dot"></div>
+            <div class="chain-step-line"></div>
+          </div>
+          <div class="chain-step-content">
+            <div class="chain-step-title">Content Hash Signed — secp256k1 signature applied</div>
+            <div class="chain-step-detail" id="ov-signed">0x7f3a8b... signed by journalist private key · Mar 29, 2026</div>
+          </div>
+        </div>
+        <div class="chain-step">
+          <div class="chain-step-left">
+            <div class="chain-step-dot"></div>
+            <div class="chain-step-line"></div>
+          </div>
+          <div class="chain-step-content">
+            <div class="chain-step-title">Smart Contract Registration — on-chain record created</div>
+            <div class="chain-step-detail">ContentRegistry.sol · registerArticle() · Block #14,082,438</div>
+          </div>
+        </div>
+        <div class="chain-step">
+          <div class="chain-step-left">
+            <div class="chain-step-dot" style="background:var(--accent-verify);"></div>
+            <div class="chain-step-line"></div>
+          </div>
+          <div class="chain-step-content">
+            <div class="chain-step-title">Editorial Approval — editor DID counter-signed</div>
+            <div class="chain-step-detail">approveContent() · did:ethr:0x3b7a... · Block #14,082,441</div>
+          </div>
+        </div>
+        <div class="chain-step">
+          <div class="chain-step-left">
+            <div class="chain-step-dot" style="background:var(--accent-chain-mid);"></div>
+          </div>
+          <div class="chain-step-content">
+            <div class="chain-step-title">Published — IPFS storage confirmed, article live</div>
+            <div class="chain-step-detail">IPFS CID: bafybeig...k9x · Mar 29, 2026 08:14 UTC</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✓</div>
+  <span id="toast-msg">Action completed</span>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      ChainPost · Holy Angel University School of Computing · Web3 News Ecosystem Thesis · March 2026
+    </div>
+    <div class="footer-network">
+      <div class="network-dot"></div>
+      <span class="network-label">Ethereum Sepolia Testnet · 12 peers</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const articles = {
+    featured: {
+      title: 'COMELEC Adopts Blockchain Verification Pilot for 2025 Electoral Reports',
+      did: 'did:ethr:0x9f2e4a1b8c3d7f0e5a2b9c4d1e8f3a0b7',
+      block: '#14,082,441', time: 'Mar 29, 2026 · 08:14 UTC',
+      ipfs: 'bafybeig4k7m2xzqv...k9x',
+      hash: '0x7f3a8b2c1d4e9f0a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8',
+      status: 'verified', statusText: 'Content Authenticated', statusDetail: 'Hash matches on-chain record. No alterations detected.'
+    },
+    a1: {
+      title: 'HAU Researchers Deploy Web3 News Authentication on Ethereum Sepolia',
+      did: 'did:ethr:0x3a9f1b4c7d2e5f8a0b3c6d9e1f4a7b0c3d6e9f2',
+      block: '#14,082,438', time: 'Mar 29, 2026 · 07:55 UTC',
+      ipfs: 'bafybeih8m3ynwrzq...m2z',
+      hash: '0x4a1c2d3e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2',
+      status: 'verified', statusText: 'Content Authenticated', statusDetail: 'Hash matches on-chain record. No alterations detected.'
+    },
+    a2: {
+      title: 'Viral Health Claim Flagged: Content Hash Mismatch Detected',
+      did: 'did:ethr:0x5b8c3d6e9f2a5b8c1d4e7f0a3b6c9d2e5f8a1b4',
+      block: '#14,082,100', time: 'Mar 29, 2026 · 06:30 UTC',
+      ipfs: 'bafybeif9n4zoxsr...p8q',
+      hash: '0x2e8b4f3a1c9d7f2e0b5a8c1d4f7a2e5b8c3d6f9a0b3e6c9d2f5a8b1c4d7e0f3',
+      status: 'tampered', statusText: 'Content Tampered', statusDetail: 'Hash mismatch: current content differs from on-chain registered hash.'
+    },
+    a3: {
+      title: 'BSP Raises Policy Rate; Central Bank Governor Signs Statement via DID',
+      did: 'did:ethr:0x5a4c7f1b3d6e9a2c5f8b1d4e7a0c3f6b9d2e5a8',
+      block: '#14,079,881', time: 'Mar 29, 2026 · 05:10 UTC',
+      ipfs: 'bafybeia7o5yvtul...r3s',
+      hash: '0x6d9f2b8e4a1c7f3d5b0e8a2c6f4b9d1e3a7c5f8b0d4e2a6c1f9b3d7e5a0c8f2',
+      status: 'verified', statusText: 'Content Authenticated', statusDetail: 'Hash matches on-chain record. Cryptographic signature valid.'
+    },
+    a4: {
+      title: 'Holy Angel University Gazette Goes Fully Decentralized for Accreditation',
+      did: 'did:ethr:0x7c2e5a8b1d4f7a0c3e6b9d2f5a8c1e4b7d0f3a6',
+      block: 'Pending', time: 'Mar 29, 2026 · 09:00 UTC',
+      ipfs: 'Pending IPFS upload',
+      hash: '0xa8f31c2e5b9d4a7f0c3e6b1d8a5c2f9e4b7d1a6c3f0e8b5d2a9f6c1e4b8d5a2',
+      status: 'pending', statusText: 'Awaiting Editorial Approval', statusDetail: 'Content hash registered. Pending editor counter-signature via smart contract.'
+    },
+    a5: {
+      title: 'NPC Issues Guidelines on Privacy in Blockchain-Based Journalism Systems',
+      did: 'did:ethr:0x9f1b4a7c2e5d8f0b3a6c9e2d5f8a1c4b7d0e3f6',
+      block: '#14,082,439', time: 'Mar 29, 2026 · 08:02 UTC',
+      ipfs: 'bafybeij2p6awuvx...s4t',
+      hash: '0x7f3a2b1c5d8e9f0a4b7c1d5e8f2a6b0c4e7d1f5a9b3c7e0d4f8a2b6c0e4f8a1',
+      status: 'verified', statusText: 'DID-Signed', statusDetail: 'Journalist DID verified. Content hash matches IPFS record.'
+    }
+  };
+
+  function openArticleOverlay(id) {
+    const art = articles[id];
+    if (!art) return;
+    document.getElementById('overlay-title').textContent = art.title;
+    document.getElementById('ov-did').textContent = art.did;
+    document.getElementById('ov-block').textContent = art.block;
+    document.getElementById('ov-time').textContent = art.time;
+    document.getElementById('ov-ipfs').textContent = art.ipfs;
+    document.getElementById('ov-hash').textContent = art.hash;
+    document.getElementById('ov-signed').textContent = art.hash.substring(0, 10) + '... signed by journalist private key · ' + art.time;
+    document.getElementById('overlay-verify-status').textContent = art.statusText;
+    document.getElementById('overlay-verify-detail').textContent = art.statusDetail;
+    const box = document.getElementById('overlay-verify-box');
+    const icon = box.querySelector('.verify-result-icon');
+    if (art.status === 'tampered') {
+      box.style.background = 'var(--accent-alert-light)';
+      box.style.borderColor = 'rgba(192,57,43,0.25)';
+      icon.style.background = 'var(--accent-alert)';
+      icon.textContent = '!';
+      document.getElementById('overlay-verify-status').style.color = 'var(--accent-alert)';
+      document.getElementById('overlay-verify-detail').style.color = 'var(--accent-alert)';
+    } else if (art.status === 'pending') {
+      box.style.background = 'var(--accent-amber-light)';
+      box.style.borderColor = 'rgba(183,115,10,0.25)';
+      icon.style.background = 'var(--accent-amber)';
+      icon.textContent = '⏳';
+      document.getElementById('overlay-verify-status').style.color = 'var(--accent-amber)';
+      document.getElementById('overlay-verify-detail').style.color = 'var(--accent-amber)';
+    } else {
+      box.style.background = 'var(--accent-chain-light)';
+      box.style.borderColor = 'rgba(26,92,58,0.25)';
+      icon.style.background = 'var(--accent-chain)';
+      icon.textContent = '✓';
+      document.getElementById('overlay-verify-status').style.color = 'var(--accent-chain)';
+      document.getElementById('overlay-verify-detail').style.color = 'var(--accent-chain)';
+    }
+    document.getElementById('article-overlay').classList.add('open');
+  }
+
+  function closeOverlay() {
+    document.getElementById('article-overlay').classList.remove('open');
+  }
+
+  function openVerifyOverlay() {
+    openArticleOverlay('featured');
+  }
+
+  document.getElementById('article-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeOverlay();
+  });
+
+  function quickVerify() {
+    const val = document.getElementById('quick-hash').value.trim();
+    if (!val) { showToast('Please enter a hash or transaction ID'); return; }
+    if (val.toLowerCase().includes('2e8b') || val.toLowerCase().includes('tamper')) {
+      openArticleOverlay('a2');
+    } else {
+      openArticleOverlay('featured');
+    }
+  }
+
+  function computeHash() {
+    const title = document.getElementById('article-title').value;
+    const body = document.getElementById('article-body').value;
+    const content = title + body;
+    if (!content.trim()) {
+      document.getElementById('hash-display').textContent = '0x — enter content above to generate hash';
+      return;
+    }
+    let hash = 0;
+    for (let i = 0; i < content.length; i++) {
+      hash = ((hash << 5) - hash) + content.charCodeAt(i);
+      hash |= 0;
+    }
+    const hex = Math.abs(hash).toString(16).padStart(8, '0');
+    const fakeHash = '0x' + hex + '4a2b1c3d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b';
+    document.getElementById('hash-display').textContent = fakeHash;
+  }
+
+  function submitArticle() {
+    const title = document.getElementById('article-title').value;
+    if (!title.trim()) { showToast('Please enter an article headline'); return; }
+    showToast('Article signed & submitted to ContentRegistry.sol');
+    document.getElementById('article-title').value = '';
+    document.getElementById('article-body').value = '';
+    document.getElementById('article-pub').value = '';
+    document.getElementById('hash-display').textContent = '0x — enter content above to generate hash';
+  }
+
+  function approveArticle(btn) {
+    const item = btn.closest('.did-item');
+    const title = item.querySelector('.did-name').textContent;
+    item.remove();
+    showToast('Editorial approval signed: ' + title);
+  }
+
+  function rejectArticle(btn) {
+    const item = btn.closest('.did-item');
+    const title = item.querySelector('.did-name').textContent;
+    item.remove();
+    showToast('Article rejected: ' + title);
+  }
+
+  function switchTab(el, id) {
+    document.querySelectorAll('.tabs')[0].querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    ['submit','identity','history'].forEach(t => {
+      const el2 = document.getElementById('tab-' + t);
+      if (el2) el2.style.display = t === id ? 'block' : 'none';
+    });
+  }
+
+  function switchTab2(el, id) {
+    document.querySelectorAll('.tabs')[1].querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    ['pending','approved'].forEach(t => {
+      const el2 = document.getElementById('tab2-' + t);
+      if (el2) el2.style.display = t === id ? 'block' : 'none';
+    });
+  }
+
+  let toastTimeout;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+
+  document.getElementById('quick-hash').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') quickVerify();
+  });
+</script>
+</body>
+</html>
