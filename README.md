@@ -1,45 +1,127 @@
-# ChainPulse Frontend
+# ChainPulse
 
-ChainPulse is a frontend-first Web3 news ecosystem website.
+A Web3-based decentralized news platform designed to combat fake news through blockchain-based verification, immutable records, and decentralized identity (DID).
 
-This project currently ships as a static HTML page and is organized so it can scale into a larger app later.
+---
 
-## Project Structure
+## Overview
 
-```text
-chainpulse/
-  README.md
-  docs/
-  src/
-    index.html
-    assets/
-      css/
-      js/
-      images/
-```
+ChainPulse ensures that every news article is authentic, traceable, and tamper-proof. By leveraging blockchain technology, it creates a transparent ecosystem where journalists can publish verified content and readers can independently validate its credibility.
 
-## Run Locally
+---
 
-Since this is a static frontend right now, you can run it in either way below:
+## Objectives
 
-1. Open `src/index.html` directly in your browser.
-2. Or use a local server (recommended for future JS modules and API work).
+* Reduce the spread of fake news and misinformation
+* Provide verifiable authorship using decentralized identity (DID)
+* Ensure immutability of published content through blockchain
+* Promote trust, transparency, and accountability in digital journalism
 
-Example with VS Code Live Server:
+---
 
-- Install the Live Server extension.
-- Right-click `src/index.html`.
-- Select **Open with Live Server**.
+## Key Features
 
-## Next Steps (Planned)
+### Content Authentication
 
-- Split inline styles into `src/assets/css/` files.
-- Move scripts into `src/assets/js/` modules.
-- Add reusable UI components and sections.
-- Connect frontend to real Web3/news data sources.
-- Add build tooling when needed (Vite/Next.js).
+* Articles are digitally signed by verified authors
+* Ensures content is authentic and unaltered
+
+### Blockchain Storage
+
+* News metadata is stored on-chain
+* Provides a tamper-resistant and immutable record
+
+### Decentralized Identity (DID)
+
+* Journalists have self-sovereign identities
+* Prevents impersonation and unauthorized publishing
+
+### Timestamp Verification
+
+* Every article is time-stamped on the blockchain
+* Enables verification of publication history
+
+### Real-Time Verification
+
+* Readers can check if content is authentic or altered
+* No need for centralized authorities
+
+### Audit Trail
+
+* Tracks edits, approvals, and publishing history
+* Ensures full transparency in the editorial process
+
+---
+
+## System Architecture
+
+* Frontend: User interface for readers and journalists
+* Backend: Handles authentication, content processing, and API calls
+* Blockchain Layer: Stores hashes, timestamps, and verification data
+* Smart Contracts: Manage publishing, verification, and logging
+* DID System: Handles identity verification and author signatures
+
+---
+
+## How It Works
+
+1. Journalist creates and submits an article
+2. System generates a cryptographic hash of the content
+3. Author signs the content using their decentralized identity
+4. Data is stored on the blockchain (hash + metadata)
+5. Readers access the article and verify its authenticity via blockchain
+
+---
+
+## Use Cases
+
+* News organizations and media outlets
+* Fact-checking platforms
+* Academic and research publishing
+* Government and public announcements
+* Social media content verification
+
+---
+
+## Impact
+
+ChainPulse addresses the growing issue of misinformation, especially in regions like the Philippines where fake news spreads rapidly through platforms such as Facebook, X (Twitter), and YouTube. By ensuring transparency and verifiability, it helps rebuild public trust in digital news.
+
+---
+
+## Future Improvements
+
+* AI-based fake news detection integration
+* Mobile application development
+* Browser extension for instant verification
+* Cross-chain interoperability
+* Community-driven fact-checking system
+
+---
+
+## Contributors
+
+* Holy Angel University – School of Computing
+* Research and Development Team
+* Blockchain and Web Development Team
+
+---
+
+## KUTEAM
+
+* Buenafe, Ashley Dyriel V.
+* Martin, Masato
+* Valderrama, Mark Harold T.
+* Yumul, Randel Angelo L.
+
+---
 
 ## Notes
 
-- Main entry point: `src/index.html`
-- Current title: `ChainPulse | Web3 News Ecosystem`
+ChainPulse is designed to complement traditional journalism, not replace it. It strengthens existing editorial processes by adding a layer of cryptographic trust and verification.
+
+---
+
+## License
+
+This project is for academic and research purposes.
